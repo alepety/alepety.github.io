@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR4 Code Registration</title>
+    <title>QR5 Code Registration</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.7/html5-qrcode.min.js"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
@@ -18,7 +18,7 @@
     <ul id="registration-list"></ul>
 
     <script>
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPYhjYyW8-VJPJWca5DvW0UF9hA4cWKpj928CjrTT0PPDKXMwsgn3UVubfOt5AoApaSQ/exec"; // Replace with your new Google Apps Script URL
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxgsRhsX3MkTTjhqd3JNnddVq95h1BY5GVXRegAJKZZdBEqzSDVUWsgeh1hhzIOpIfXow/exec"; // Replace with your new Google Apps Script URL
 
     function onScanSuccess(decodedText, decodedResult) {
         let timestamp = new Date().toLocaleString();
@@ -29,32 +29,30 @@
         document.getElementById("registration-list").appendChild(listItem);
 
         // Preflight Request to Check CORS
- 
-                    // Send data to Google Sheets with CORS support
-            fetch(GOOGLE_SCRIPT_URL, {
-                
-                method: "GET",
-                //body: JSON.stringify({ qr_code: decodedText, timestamp: timestamp }),
-                headers: {
-        "Content-Type": "text/plain;charset=utf-8",
-      },
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.text();
-            })
-            .then(data => console.log("Success:", data))
-            .catch(error => console.error("Error:", error));
-
-
-
-
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: "OPTIONS",
+            mode: "cors"
+        })
+        .then(response => {
+            if (response.ok) {
+                // Send the actual POST request after a successful OPTIONS request
+                return fetch(GOOGLE_SCRIPT_URL, {
+                    method: "POST",
+                    mode: "cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ qr_code: decodedText, timestamp: timestamp })
+                });
+            } else {
+                throw new Error(`Preflight request failed with status: ${response.status}`);
+            }
+        })
+        .then(response => response.text())
+        .then(data => console.log("Success:", data))
+        .catch(error => console.error("Error:", error));
     }
 
     function onScanFailure(error) {
-        //console.warn(`QR Code scan failed: ${error}`);
+        console.warn(`QR Code scan failed: ${error}`);
     }
 
     function startCamera() {
