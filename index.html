@@ -18,7 +18,7 @@
     <ul id="registration-list"></ul>
 
     <script>
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/a/macros/scopely.com/s/AKfycbz1q7VvsTL9B73RoVfihB355_4Ht-UC3DYVmZGZ5uiA-Ei_z7QY3TkGGP1L_6uDQVjE/exec"; // Replace with your new Google Apps Script URL
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/a/macros/scopely.com/s/AKfycbw-zwE8t17OA2NtcSEC_CF7xXmd3HPWxwZdecFx19s3uIGYzJvdasug8QwvJPRWnUutiQ/exec"; // Replace with your new Google Apps Script URL
 
     function onScanSuccess(decodedText, decodedResult) {
         let timestamp = new Date().toLocaleString();
@@ -33,7 +33,7 @@
                     // Send data to Google Sheets with CORS support
             fetch(GOOGLE_SCRIPT_URL, {
                 redirect: "follow",
-                method: "POST",
+                method: "GET",
                 body: JSON.stringify({ qr_code: decodedText, timestamp: timestamp }),
                 headers: {
         "Content-Type": "text/plain;charset=utf-8",
