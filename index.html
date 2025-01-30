@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Registration</title>
+    <title>QR2 Code Registration</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.7/html5-qrcode.min.js"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
@@ -29,14 +29,28 @@
         document.getElementById("registration-list").appendChild(listItem);
 
         // Preflight Request to Check CORS
-        fetch(GOOGLE_SCRIPT_URL, {
-      redirect: "follow",
-      method: "POST",
-      body: JSON.stringify(DATA),
-      headers: {
+ 
+                    // Send data to Google Sheets with CORS support
+            fetch(GOOGLE_SCRIPT_URL, {
+                redirect: "follow",
+                method: "POST",
+                body: JSON.stringify({ qr_code: decodedText, timestamp: timestamp }),
+                headers: {
         "Content-Type": "text/plain;charset=utf-8",
       },
-    });
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(data => console.log("Success:", data))
+            .catch(error => console.error("Error:", error));
+
+
+
+
     }
 
     function onScanFailure(error) {
