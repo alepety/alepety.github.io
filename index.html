@@ -18,7 +18,7 @@
     <ul id="registration-list"></ul>
 
     <script>
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/a/macros/scopely.com/s/AKfycbzSuDvBZfEPQVgTy0m96tdajyfZH2R6w90b76SB6MEsK2cMwbwVGebqFYOKsYAaAGp02Q/exec"; // Replace with your new Google Apps Script URL
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/a/macros/scopely.com/s/AKfycbyT2MNMQZO3RfPwJ5FrR1bvrAeo_ZFcZfKU0nd1oVSG8lirNamVusvuH6Zq1KiGbqNzIw/exec"; // Replace with your new Google Apps Script URL
 
     function onScanSuccess(decodedText, decodedResult) {
         let timestamp = new Date().toLocaleString();
@@ -52,7 +52,7 @@
     }
 
     function onScanFailure(error) {
-        console.warn(`QR Code scan failed: ${error}`);
+        //console.warn(`QR Code scan failed: ${error}`);
     }
 
     function startCamera() {
