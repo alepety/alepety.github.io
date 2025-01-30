@@ -18,7 +18,7 @@
     <ul id="registration-list"></ul>
 
     <script>
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/a/macros/scopely.com/s/AKfycbzaothG-l10hwga416qbKVCq3Rh48b-_V1nOcsAd0rOrc186aDjEIEVBza7qqhjW_MgJw/exec"; // Replace with your new Google Apps Script URL
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/a/macros/scopely.com/s/AKfycbw71bD98E21B4ruT67WeeJyeIygtaTHB_3nDKOwjwlSejjDtss2ALmttJxXRQvcmYZaeg/exec"; // Replace with your new Google Apps Script URL
 
     function onScanSuccess(decodedText, decodedResult) {
         let timestamp = new Date().toLocaleString();
@@ -30,25 +30,13 @@
 
         // Preflight Request to Check CORS
         fetch(GOOGLE_SCRIPT_URL, {
-            method: "OPTIONS",
-            mode: "cors"
-        })
-        .then(response => {
-            if (response.ok) {
-                // Send the actual POST request after a successful OPTIONS request
-                return fetch(GOOGLE_SCRIPT_URL, {
-                    method: "POST",
-                    mode: "cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ qr_code: decodedText, timestamp: timestamp })
-                });
-            } else {
-                throw new Error(`Preflight request failed with status: ${response.status}`);
-            }
-        })
-        .then(response => response.text())
-        .then(data => console.log("Success:", data))
-        .catch(error => console.error("Error:", error));
+      redirect: "follow",
+      method: "POST",
+      body: JSON.stringify(DATA),
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8",
+      },
+    });
     }
 
     function onScanFailure(error) {
