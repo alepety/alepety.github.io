@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR-2 Code Registration</title>
+    <title>QR-3 Code Registration</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.7/html5-qrcode.min.js"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
@@ -18,7 +18,7 @@
     <ul id="registration-list"></ul>
 
     <script>
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/a/macros/scopely.com/s/AKfycbwN5AQL_X6r7iM86Dr_WFxIzzFmVt8Qi_LnZU8R1ZulgPKWGMtJuK0Sgx2AzwXHJ4oQYA/exec"; // Replace with your Google Apps Script URL
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/a/macros/scopely.com/s/AKfycbxan5saG7Gcr3bI_fQkCUl1UeAoxpXo7nPoyKUWbJlZAcVN6Zc4CxZV0jVTryF7h7_E7Q/exec"; // Replace with your Google Apps Script URL
 
         function onScanSuccess(decodedText, decodedResult) {
             let timestamp = new Date().toLocaleString();
@@ -28,16 +28,17 @@
             listItem.textContent = entry;
             document.getElementById("registration-list").appendChild(listItem);
 
-            // Send data to Google Sheets
-fetch(GOOGLE_SCRIPT_URL, {
+
+            fetch(GOOGLE_SCRIPT_URL, {
     method: "POST",
-    mode: "cors",  // Allows cross-origin requests
+    mode: "cors",  // Enable CORS
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ qr_code: decodedText, timestamp: timestamp })
 })
 .then(response => response.text())
 .then(data => console.log("Success:", data))
 .catch(error => console.error("Error:", error));
+
 
         }
 
