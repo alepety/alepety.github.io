@@ -18,53 +18,59 @@
     <ul id="registration-list"></ul>
 
     <script>
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/a/macros/scopely.com/s/AKfycbwcZMDEFd282iqTBvw8zKmSmzC1tHDi6ozgv7MhIogj0WhBErjEh49IDs7yfrKo-0JmNA/exec"; // Replace with your Google Apps Script URL
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/a/macros/scopely.com/s/AKfycbzSuDvBZfEPQVgTy0m96tdajyfZH2R6w90b76SB6MEsK2cMwbwVGebqFYOKsYAaAGp02Q/exec"; // Replace with your new Google Apps Script URL
 
-        function onScanSuccess(decodedText, decodedResult) {
-            let timestamp = new Date().toLocaleString();
-            let entry = `${decodedText} - ${timestamp}`;
-            
-            let listItem = document.createElement("li");
-            listItem.textContent = entry;
-            document.getElementById("registration-list").appendChild(listItem);
+    function onScanSuccess(decodedText, decodedResult) {
+        let timestamp = new Date().toLocaleString();
+        let entry = `${decodedText} - ${timestamp}`;
 
-            // Send data to Google Sheets with CORS support
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: "POST",
-                mode: 'no-cors',
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                redirect: "follow",
-                body: JSON.stringify({ qr_code: decodedText, timestamp: timestamp })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.text();
-            })
-            .then(data => console.log("Success:", data))
-            .catch(error => console.error("Error:", error));
-        }
+        let listItem = document.createElement("li");
+        listItem.textContent = entry;
+        document.getElementById("registration-list").appendChild(listItem);
 
-        function onScanFailure(error) {
-            console.warn(`QR Code scan failed: ${error}`);
-        }
-
-        function startCamera() {
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-                    .then(function(stream) {
-                        let html5QrCode = new Html5Qrcode("qr-reader");
-                        html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, onScanSuccess, onScanFailure)
-                            .catch(err => console.error("Error starting QR scanner:", err));
-                    })
-                    .catch(err => console.error("Camera access denied or not available:", err));
+        // Preflight Request to Check CORS
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: "OPTIONS",
+            mode: "cors"
+        })
+        .then(response => {
+            if (response.ok) {
+                // Send the actual POST request after a successful OPTIONS request
+                return fetch(GOOGLE_SCRIPT_URL, {
+                    method: "POST",
+                    mode: "cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ qr_code: decodedText, timestamp: timestamp })
+                });
             } else {
-                console.error("Camera not supported in this browser.");
+                throw new Error(`Preflight request failed with status: ${response.status}`);
             }
-        }
+        })
+        .then(response => response.text())
+        .then(data => console.log("Success:", data))
+        .catch(error => console.error("Error:", error));
+    }
 
-        startCamera();
-    </script>
+    function onScanFailure(error) {
+        console.warn(`QR Code scan failed: ${error}`);
+    }
+
+    function startCamera() {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                .then(function(stream) {
+                    let html5QrCode = new Html5Qrcode("qr-reader");
+                    html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, onScanSuccess, onScanFailure)
+                        .catch(err => console.error("Error starting QR scanner:", err));
+                })
+                .catch(err => console.error("Camera access denied or not available:", err));
+        } else {
+            console.error("Camera not supported in this browser.");
+        }
+    }
+
+    startCamera();
+</script>
+
 </body>
 </html>
