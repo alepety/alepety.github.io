@@ -31,6 +31,7 @@
             // Send data to Google Sheets with CORS support
             fetch(GOOGLE_SCRIPT_URL, {
                 method: "POST",
+                mode: 'no-cors',
                 headers: { "Content-Type": "text/plain;charset=utf-8" },
                 redirect: "follow",
                 body: JSON.stringify({ qr_code: decodedText, timestamp: timestamp })
