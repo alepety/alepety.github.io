@@ -18,7 +18,7 @@
     <ul id="registration-list"></ul>
 
     <script>
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/a/macros/scopely.com/s/AKfycbyvzOnn8OonE2I9Myrr_cayr2pJmPHyh6yx0MJbzm0SvS2iGWTuZ0Il4q4BM_8S3KNV5A/exec"; // Replace with your Google Apps Script URL
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/a/macros/scopely.com/s/AKfycbwN5AQL_X6r7iM86Dr_WFxIzzFmVt8Qi_LnZU8R1ZulgPKWGMtJuK0Sgx2AzwXHJ4oQYA/exec"; // Replace with your Google Apps Script URL
 
         function onScanSuccess(decodedText, decodedResult) {
             let timestamp = new Date().toLocaleString();
@@ -29,14 +29,16 @@
             document.getElementById("registration-list").appendChild(listItem);
 
             // Send data to Google Sheets
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ qr_code: decodedText, timestamp: timestamp })
-            })
-            .then(response => response.text())
-            .then(data => console.log("Success:", data))
-            .catch(error => console.error("Error:", error));
+fetch(GOOGLE_SCRIPT_URL, {
+    method: "POST",
+    mode: "cors",  // Allows cross-origin requests
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ qr_code: decodedText, timestamp: timestamp })
+})
+.then(response => response.text())
+.then(data => console.log("Success:", data))
+.catch(error => console.error("Error:", error));
+
         }
 
         function onScanFailure(error) {
