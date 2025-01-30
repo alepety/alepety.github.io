@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR-2 Code Registration</title>
+    <title>QR-3 Code Registration</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.7/html5-qrcode.min.js"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
@@ -31,7 +31,6 @@
             // Send data to Google Sheets with CORS support
             fetch(GOOGLE_SCRIPT_URL, {
                 method: "POST",
-                mode: "cors",  // Enable CORS
                 headers: { "Content-Type": "text/plain;charset=utf-8" },
                 redirect: "follow",
                 body: JSON.stringify({ qr_code: decodedText, timestamp: timestamp })
