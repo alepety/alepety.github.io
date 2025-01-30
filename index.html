@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR-3 Code Registration</title>
+    <title>QR Code Registration</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.7/html5-qrcode.min.js"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
@@ -28,22 +28,25 @@
             listItem.textContent = entry;
             document.getElementById("registration-list").appendChild(listItem);
 
-
+            // Send data to Google Sheets with CORS support
             fetch(GOOGLE_SCRIPT_URL, {
-    method: "POST",
-    mode: "cors",  // Enable CORS
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ qr_code: decodedText, timestamp: timestamp })
-})
-.then(response => response.text())
-.then(data => console.log("Success:", data))
-.catch(error => console.error("Error:", error));
-
-
+                method: "POST",
+                mode: "cors",  // Enable CORS
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ qr_code: decodedText, timestamp: timestamp })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(data => console.log("Success:", data))
+            .catch(error => console.error("Error:", error));
         }
 
         function onScanFailure(error) {
-            //console.warn(`QR Code scan failed: ${error}`);
+            console.warn(`QR Code scan failed: ${error}`);
         }
 
         function startCamera() {
